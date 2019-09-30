@@ -1,6 +1,9 @@
 # '''
 # Linked List hash table key/value pair
 # '''
+import bcrypt
+import hashlib
+
 class LinkedPair:
     def __init__(self, key, value):
         self.key = key
@@ -23,6 +26,8 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
+
+
         return hash(key)
 
 
