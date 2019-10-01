@@ -1,6 +1,9 @@
 # '''
 # Linked List hash table key/value pair
 # '''
+import bcrypt
+import hashlib
+
 class LinkedPair:
     def __init__(self, key, value):
         self.key = key
@@ -23,7 +26,8 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-        return hash(key)
+        hashvalue = int(hashlib.sha256(key).hexdigest(), 16)
+        return hashvalue
 
 
     def _hash_djb2(self, key):
@@ -51,7 +55,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        kv_pair = { key: value }
+            #new storage index equals to the value 
+            # that was used to be before it
+        self.storage[index] = kv_pair.copy()
+
+        
+
+
+
 
 
 
@@ -63,7 +76,10 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        if (self._hash_mod(key) not in self.storage):
+            print('Key cannot be found')
+        self.storage[self._hash_mod][key] = None
+
 
 
     def retrieve(self, key):
@@ -74,7 +90,9 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        if (self._hash_mod(key) not in self.storage):
+            return None
+        return self.storage[self._hash_mod][key]
 
 
     def resize(self):
@@ -84,7 +102,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity *= 2 
+        new_storage = [None] * self.capacity
+        for i in range(self.capacity):
+            new_storage[i] = self.storage[i]
+        self.storage = new_storage
+
+
+
 
 
 
