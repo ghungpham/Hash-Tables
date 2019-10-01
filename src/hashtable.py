@@ -56,17 +56,13 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
-        kv_pair = { key: value }
             #new storage index equals to the value 
             # that was used to be before it
-        self.storage[index] = kv_pair.copy()
-
+        if self.storage[index] is not None:
+            print("Warning")
+            return
+        self.storage[index] = LinkedPair(key,value)
         
-
-
-
-
-
 
     def remove(self, key):
         '''
@@ -76,9 +72,11 @@ class HashTable:
 
         Fill this in.
         '''
-        if (self._hash_mod(key) not in self.storage):
+        index = self._hash_mod(key)
+        if self.storage(index) is None:
             print('Key cannot be found')
-        self.storage[self._hash_mod][key] = None
+        self.storage[index] = None
+        
 
 
 
@@ -90,9 +88,13 @@ class HashTable:
 
         Fill this in.
         '''
-        if (self._hash_mod(key) not in self.storage):
+        index= self._hash_mod(key)
+        pair = self.storage[index]
+
+        if pair is None:
             return None
-        return self.storage[self._hash_mod][key]
+        else:
+            return self.storage[index].value
 
 
     def resize(self):
@@ -104,8 +106,13 @@ class HashTable:
         '''
         self.capacity *= 2 
         new_storage = [None] * self.capacity
-        for i in range(self.capacity):
-            new_storage[i] = self.storage[i]
+    
+        for pair in self.storage:
+            if pair is not None:
+                #rehash the key
+                new_index = self._hash_mod(pair.key)
+                new_storage[new_index] = pair
+
         self.storage = new_storage
 
 
