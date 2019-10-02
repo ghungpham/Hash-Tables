@@ -26,7 +26,7 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-        hashvalue = int(hashlib.sha256(key).hexdigest(), 16)
+        hashvalue = int(hashlib.sha256(key.encode('utf-8')).hexdigest(), 16)
         return hashvalue
 
 
@@ -56,12 +56,21 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
-            #new storage index equals to the value 
-            # that was used to be before it
+    
         if self.storage[index] is not None:
-            print("Warning")
-            return
-        self.storage[index] = LinkedPair(key,value)
+            current = self.storage[index]
+            while current.next is not None and current.key != key:
+                current = current.next
+            if current.key == key:
+                current.value = current.value
+                return
+            else:
+                current.next = LinkedPair(key, value)
+                return
+        else:
+            self.storage[index] = LinkedPair(key, value)
+        
+        
         
 
     def remove(self, key):
@@ -72,10 +81,23 @@ class HashTable:
 
         Fill this in.
         '''
+        # index = self._hash_mod(key)
+        # if self.storage[index] is None:
+        #     print('Key cannot be found')
+        # if self.storage[index].next == None:
+        #     self.storage[index] = None
+        # if self.storage[index].next is not None:
+        #     current = self.storage[index] 
+        #     while current:
+        #         if current.key == key:
+        #             current = current.next
+        #         current = current.next
         index = self._hash_mod(key)
-        if self.storage(index) is None:
-            print('Key cannot be found')
-        self.storage[index] = None
+        if self.storage[index] == None:
+            print('Warning')
+        else:
+            self.storage[index] = None
+            
         
 
 
@@ -88,13 +110,33 @@ class HashTable:
 
         Fill this in.
         '''
-        index= self._hash_mod(key)
-        pair = self.storage[index]
+        # index= self._hash_mod(key)
+        # pair = self.storage[index]
 
-        if pair is None:
+        # if pair is None:
+        #     return None
+        # if pair is not None:
+        #     current = pair
+        #     while current is not None:
+        #         if current.key == key:
+        #             return current.value
+        #         current = current.next
+        #     else:
+        #         return None
+        index = self._hash_mod(key)
+        if self.storage[index] is None:
             return None
         else:
-            return self.storage[index].value
+            curr = self.storage[index]
+            if curr.key == key:
+                return curr.value
+            while curr is not None:
+                if curr.key == key:
+                    return curr.value
+                else:
+                    curr = curr.next
+            return None
+    
 
 
     def resize(self):
